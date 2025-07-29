@@ -41,25 +41,31 @@ Huge shoutout to [@IzakFilmalter](https://x.com/IzakFilmalter) with [OpenFaith](
    bun install
    ```
 
-2. **Start and set up the database container:**
+2. **Set up environment variables:**
+
+   ```bash
+   cp env.example .env
+   ```
+
+3. **Start and set up the database container:**
 
    ```bash
    bun db:start
    ```
 
-3. **Push database schema to database using Drizzle Zero and Drizzle Kit:**
+4. **Push database schema to database using Drizzle Zero and Drizzle Kit:**
 
    ```bash
    bun db:push
    ```
 
-4. **Run the backend container in watch mode with Zero Cache for replication:**
+5. **Run the backend container in watch mode with Zero Cache for replication:**
 
    ```bash
    bun db:backend
    ```
 
-5. **In a second terminal, start the web app's Vite dev server using Alchemy:**
+6. **In a second terminal, start the web app's Vite dev server using Alchemy:**
 
    ```bash
    bun dev
