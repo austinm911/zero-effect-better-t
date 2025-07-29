@@ -1,0 +1,34 @@
+{
+	"name": "@zero-effect/zero-effect",
+	"main": "src/index.ts",
+	"exports": {
+		".": "./src/index.ts",
+		"./client": "./src/client/index.ts",
+		"./server/*": "./src/server/*.ts",
+		"./shared/*": "./src/shared/*.ts"
+	},
+	"type": "module",
+	"scripts": {
+		"build": "tsdown",
+		"check-types": "tsc -b",
+		"check": "biome check --write",
+		"clean": "rm -rf node_modules .turbo dist",
+		"test": "bun test",
+		"lint": "biome lint --write",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@effect/sql": "catalog:",
+		"drizzle-orm": "catalog:",
+		"@effect/sql-drizzle": "catalog:",
+		"@effect/sql-pg": "catalog:",
+		"@rocicorp/zero": "catalog:",
+		"@zero-effect/effect-test": "workspace:*",
+		"@zero-effect/env": "workspace:*",
+		"effect": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:types",
+		"@zero-effect/tsconfig": "workspace:*"
+	}
+}

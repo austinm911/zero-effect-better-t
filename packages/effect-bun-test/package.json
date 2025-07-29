@@ -1,0 +1,20 @@
+{
+	"name": "@zero-effect/effect-test",
+	"main": "src/index.ts",
+	"type": "module",
+	"scripts": {
+		"build": "tsdown",
+		"check-types": "tsc -b",
+		"check": "biome check --write",
+		"clean": "rm -rf node_modules .turbo dist",
+		"lint": "biome lint --write",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"effect": "catalog:"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:types",
+		"@zero-effect/tsconfig": "workspace:*"
+	}
+}

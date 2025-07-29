@@ -1,0 +1,49 @@
+{
+	"name": "@zero-effect/backend",
+	"type": "module",
+	"exports": {
+		"./*": "./src/*.ts",
+		"./schema": "./src/schema/index.ts",
+		"./lib/drizzle-effect": "./src/lib/drizzle-effect.ts",
+		"./zero": "./src/zero/index.ts"
+	},
+	"main": "src/index.ts",
+	"scripts": {
+		"build": "tsdown",
+		"check": "biome check --write",
+		"check-types": "tsc -b",
+		"clean": "rm -rf node_modules .turbo dist",
+		"compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
+		"db:generate": "bun --env-file=../../.env -- drizzle-kit generate",
+		"db:migrate": "bun --env-file=../../.env -- drizzle-kit migrate",
+		"db:push": "bun --env-file=../../.env -- drizzle-kit push",
+		"db:start": "docker compose -f ../../docker/docker-compose.yml up -d",
+		"db:stop": "docker compose -f ../../docker/docker-compose.yml down",
+		"db:studio": "bun --env-file=../../.env -- drizzle-kit studio",
+		"db:watch": "docker compose -f ../../docker/docker-compose.yml up",
+		"typecheck": "tsc --noEmit",
+		"zero:cache": "bun --env-file=../../.env -- zero-cache-dev -p ./src/zero/schema/index.ts --log-level debug",
+		"zero:generate": "drizzle-zero generate -c ./src/zero/zero.config.ts -o ./src/zero/schema/schema.gen.ts"
+	},
+	"dependencies": {
+		"effect": "catalog:",
+		"@effect/sql": "catalog:",
+		"@effect/sql-drizzle": "catalog:",
+		"@effect/sql-pg": "catalog:",
+		"@rocicorp/zero": "catalog:",
+		"@effect/platform": "catalog:",
+		"@effect/rpc": "catalog:",
+		"@zero-effect/env": "workspace:*",
+		"@zero-effect/zero-effect": "workspace:*",
+		"better-auth": "^1.3.4",
+		"drizzle-orm": "catalog:",
+		"drizzle-zero": "^0.13.0",
+		"pg": "^8.16.3"
+	},
+	"devDependencies": {
+		"@types/bun": "catalog:types",
+		"@types/pg": "^8.15.5",
+		"@zero-effect/tsconfig": "workspace:*",
+		"drizzle-kit": "^0.31.4"
+	}
+}

@@ -1,0 +1,29 @@
+{
+	"name": "@zero-effect/env",
+	"version": "0.0.0",
+	"type": "module",
+	"exports": {
+		"./client": [
+			"./src/client.ts"
+		],
+		"./server": [
+			"./src/server.ts"
+		]
+	},
+	"scripts": {
+		"check": "biome check --write",
+		"clean": "rm -rf node_modules .turbo dist",
+		"format": "biome format --write .",
+		"lint": "biome lint",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@zero-effect/tsconfig": "workspace:*",
+		"effect": "catalog:"
+	},
+	"devDependencies": {
+		"@turbo/gen": "catalog:",
+		"@zero-effect/tsconfig": "workspace:*",
+		"vite": "catalog:frontend"
+	}
+}

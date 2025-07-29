@@ -1,0 +1,15 @@
+{
+	"extends": "@zero-effect/tsconfig/base.json",
+	"compilerOptions": {
+		"baseUrl": "./",
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+		"noEmit": false,
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"outDir": "./dist"
+	},
+	"include": ["**/*"],
+	"exclude": ["node_modules", "dist"]
+}

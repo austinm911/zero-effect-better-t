@@ -1,0 +1,28 @@
+{
+	"name": "@zero-effect/infra",
+	"private": true,
+	"type": "module",
+	"exports": {
+		"./web": "./src/run.ts"
+	},
+	"scripts": {
+		"web:dev": "alchemy dev ./src/web.run.ts --env-file ../.env",
+		"crm:deploy": "NODE_ENV=production alchemy deploy ./src/crm.run.ts --env-file ../.env",
+		"check": "biome check --write",
+		"clean": "rm -rf node_modules .turbo dist",
+		"lint": "biome lint --write",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@zero-effect/backend": "workspace:*",
+		"@zero-effect/env": "workspace:*",
+		"alchemy": "catalog:",
+		"effect": "catalog:"
+	},
+	"devDependencies": {
+		"@turbo/gen": "catalog:",
+		"@types/bun": "catalog:types",
+		"@types/node": "catalog:types",
+		"@zero-effect/tsconfig": "workspace:*"
+	}
+}

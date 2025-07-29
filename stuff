@@ -1,0 +1,35 @@
+# -----
+# ZERO - Sync
+# -----
+ZERO_UPSTREAM_DB=postgresql://user:password@localhost:5428/zero-eff 
+ZERO_PUSH_URL = "http://localhost:3000/api/zero/push"
+# A Postgres database Zero can use for storing Client View Records (information about what has been synced to which clients). Can be same as above db, but nice to keep separate for cleanliness and so that it can scale separately when needed.
+ZERO_CVR_DB=postgresql://user:password@localhost:5428/zero-eff
+# A Postgres database Zero can use for storing its own replication log. Can be same as either of above, but nice to keep separate for same reason as cvr db.
+ZERO_CHANGE_DB=postgresql://user:password@localhost:5428/zero-eff
+# Secret to decode auth token.
+ZERO_AUTH_SECRET=secretkey
+# Place to store sqlite replica file.
+ZERO_REPLICA_FILE=/tmp/HELLO.db
+# Where UI will connect to zero-cache.
+VITE_PUBLIC_SERVER=http://localhost:4848
+
+# -----
+# CLOUDFLARE - Web/Server Deployment
+# -----
+CLOUDFLARE_API_TOKEN=xxx
+CLOUDFLARE_ACCOUNT_ID=xxx
+CLOUDFLARE_ACCESS_KEY_ID=xxx
+CLOUDFLARE_SECRET_ACCESS_KEY=xxx
+
+# -----
+# ALCHEMY - Infra as Code
+# -----
+ALCHEMY_STATE_TOKEN=xxx=
+
+# -----
+# BETTER AUTH - Auth
+# -----
+CORS_ORIGIN=http://localhost:3001
+BETTER_AUTH_SECRET=xxx
+BETTER_AUTH_URL=http://localhost:3000
