@@ -1,19 +1,7 @@
 {
-	"$schema": "../../node_modules/wrangler/config-schema.json",
-	"name": "zero-effect-better-t",
+	"name": "zero-effect-dev-zero-effect-website",
 	"main": ".output/server/index.mjs",
-	"compatibility_date": "2025-07-05",
+	"compatibility_date": "2025-07-29",
 	"compatibility_flags": ["nodejs_compat"],
-	"assets": {
-		"directory": ".output/public"
-	},
-	"observability": {
-		"enabled": true
-	}
-	// "kv_namespaces": [
-	//   {
-	//     "binding": "CACHE",
-	//     "id": "<Your KV ID>",
-	//   },
-	// ],
+	"assets": { "directory": "../apps/web/.output/public", "binding": "ASSETS" }
 }

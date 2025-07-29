@@ -1,5 +1,5 @@
 services:
-    zero_effect_postgres:
+    zeffect_postgres:
         image: postgres:17.5-alpine
         shm_size: 1g
         user: postgres
@@ -23,9 +23,9 @@ services:
             -c hot_standby=on 
             -c hot_standby_feedback=on
         volumes:
-            - zero_effect_pgdata:/var/lib/postgresql/data
+            - zeffect_pgdata:/var/lib/postgresql/data
             - ./:/docker-entrypoint-initdb.d
 
 volumes:
-    zero_effect_pgdata:
+    zeffect_pgdata:
         driver: local

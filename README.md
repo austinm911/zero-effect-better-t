@@ -35,31 +35,37 @@ Huge shoutout to [@IzakFilmalter](https://x.com/IzakFilmalter) with [OpenFaith](
 
 ## Getting Started
 
-First, install the dependencies:
+1. **Install dependencies:**
 
-```bash
-bun install
-```
+   ```bash
+   bun install
+   ```
 
-## Database Setup
+2. **Start and set up the database container:**
 
-This project uses PostgreSQL with Drizzle ORM.
+   ```bash
+   bun db:start
+   ```
 
-1. Make sure you have a PostgreSQL database set up.
-2. Apply the schema to your database using Drizzle Kit:
+3. **Push database schema to database using Drizzle Zero and Drizzle Kit:**
 
-```bash
-bun db:push
-```
+   ```bash
+   bun db:push
+   ```
 
-Then, run the development server:
+4. **Run the backend container in watch mode with Zero Cache for replication:**
 
-```bash
-bun dev
-```
+   ```bash
+   bun db:backend
+   ```
+
+5. **In a second terminal, start the web app's Vite dev server using Alchemy:**
+
+   ```bash
+   bun dev
+   ```
 
 Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
-The API is running at [http://localhost:3000](http://localhost:3000).
 
 ## Project Structure
 
@@ -78,14 +84,23 @@ zero-effect-better-t/
 
 ## Available Scripts
 
-- `bun dev`: Start all applications in development mode
-- `bun build`: Build all applications
-- `bun dev:web`: Start only the web application
-- `bun dev:server`: Start only the server
-- `bun check-types`: Check TypeScript types across all apps
-- `bun db:push`: Push schema changes to database
+### Development
+
+- `bun dev`: Start the web application development server using Alchemy
+- `bun db:start`: Start and set up the database container
+- `bun db:backend`: Run the backend container in watch mode with Zero Cache for replication
+- `bun db:push`: Push schema changes to database using Drizzle Zero and Drizzle Kit
 - `bun db:studio`: Open database studio UI
+
+### Build & Quality
+
+- `bun build`: Build all applications
+- `bun check-types`: Check TypeScript types across all apps
 - `bun check`: Run Biome formatting and linting
+
+### Deployment
+
+- `bun deploy`: Deploy the web application to production using Alchemy
 
 ## Current Limitiations / Issues
 

@@ -17,14 +17,24 @@
 			"dependsOn": ["^check-types"]
 		},
 		"dev:backend": {
-			"dependsOn": [
-				"zero:cache",
-				"@zero-effect/backend#db:studio"
-			],
+			"dependsOn": ["db:watch", "zero:cache", "db:studio"],
 			"cache": false,
 			"persistent": true
 		},
-		
+		"db:start": {
+			"cache": false
+		},
+		"db:watch": {
+			"cache": false
+		},
+		"zero:cache": {
+			"dependsOn": ["db:start"],
+			"cache": false
+		},
+		"db:studio": {
+			"dependsOn": ["db:start"],
+			"cache": false
+		},
 		"dev:frontend": {
 			"dependsOn": ["@zero-effect/web#dev"],
 			"cache": false,
@@ -38,8 +48,9 @@
 			"cache": false,
 			"persistent": true
 		},
-		"db:studio": {
-			"cache": false
+		"db:reset": {
+			"cache": false,
+			"persistent": true
 		},
 		"db:migrate": {
 			"cache": false,
@@ -49,24 +60,11 @@
 			"cache": false,
 			"persistent": true
 		},
-		"db:start": {
-			"cache": false
-		},
 		"db:stop": {
 			"cache": false,
 			"persistent": true
 		},
-		"db:watch": {
-			"cache": false
-		},
 		"clean": {
-			"cache": false
-		},
-		"db:down": {
-			"cache": false,
-			"persistent": true
-		},
-		"zero:cache": {
 			"cache": false
 		}
 	}

@@ -24,18 +24,25 @@ const app = await alchemy("zero-effect", {
 	},
 })
 
-const crm = await TanStackStart("zero-effect-website", {
+// Todo: This is where KV, Durable Objects, etc. could be added
+
+const web = await TanStackStart("zero-effect-website", {
 	name: `${app.name}-${app.stage}-zero-effect-website`,
 	apiToken: secrets.apiToken,
 	command: "bun run build",
 	dev: { command: "bun run dev" },
 	cwd: join(projectRoot, "apps/web"),
 	compatibility: "node",
-	compatibilityDate: "2025-07-19",
+	compatibilityDate: "2025-07-29",
+	bindings: {
+		// TODO: Add bindings here
+		// KV: {
+		// },
+	},
 })
 
 console.log({
-	url: crm.url,
+	url: web.url,
 })
 
 if (stage === "prod") {

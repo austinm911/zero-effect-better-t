@@ -10,11 +10,11 @@ import type {
 	Schema as ZeroSchema,
 } from "@rocicorp/zero"
 import { Effect, Runtime } from "effect"
-import { 
-	ZeroMutatorDatabaseError,
-	ZeroMutatorAuthError,
-	ZeroMutatorValidationError,
+import {
 	ZeroMutationProcessingError,
+	ZeroMutatorAuthError,
+	ZeroMutatorDatabaseError,
+	ZeroMutatorValidationError,
 } from "../shared/errors"
 
 // Re-export error types for convenience

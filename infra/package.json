@@ -6,8 +6,8 @@
 		"./web": "./src/run.ts"
 	},
 	"scripts": {
-		"web:dev": "alchemy dev ./src/web.run.ts --env-file ../.env",
-		"crm:deploy": "NODE_ENV=production alchemy deploy ./src/crm.run.ts --env-file ../.env",
+		"dev": "alchemy dev ./src/run.ts --env-file ../.env",
+		"deploy": "NODE_ENV=production alchemy deploy ./src/crm.run.ts --env-file ../.env",
 		"check": "biome check --write",
 		"clean": "rm -rf node_modules .turbo dist",
 		"lint": "biome lint --write",

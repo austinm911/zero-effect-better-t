@@ -1,5 +1,1 @@
-CREATE DATABASE zero_effect;
--- CREATE DATABASE zero_effect_cvr;
--- CREATE DATABASE zero_effect_cdb;
-
-\c zero_effect;
+--  If you want to seed the database with some data, you can use this file.
