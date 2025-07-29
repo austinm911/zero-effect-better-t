@@ -8,6 +8,8 @@ This is a modified version of the template to add on the following features:
 - Effect
 - Alchemy
 
+Huge shoutout to [@IzakFilmalter](https://x.com/IzakFilmalter) with [OpenFaith](https://github.com/FaithBase-AI/openfaith) for all of the legwork with integrating Effect and Zero together.
+
 ## Goals
 
 - [ ] Backend logic leveraging Effect
