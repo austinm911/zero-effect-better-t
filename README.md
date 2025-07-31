@@ -10,6 +10,8 @@ This is a modified version of the template to add on the following features:
 
 Huge shoutout to [@IzakFilmalter](https://x.com/IzakFilmalter) with [OpenFaith](https://github.com/FaithBase-AI/openfaith) for all of the legwork with integrating Effect and Zero together.
 
+>Note: I am learning Effect and using this project to try to better understand it so this is a work in progress.
+
 ## Goals
 
 - [ ] Backend logic leveraging Effect

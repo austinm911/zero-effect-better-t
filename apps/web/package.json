@@ -10,6 +10,9 @@
 		"cf-typegen": "wrangler types --env-interface Env"
 	},
 	"dependencies": {
+		"effect": "catalog:",
+		"@effect/platform": "catalog:",
+		"@faker-js/faker": "catalog:",
 		"@rocicorp/zero": "catalog:",
 		"@tailwindcss/vite": "^4.1.11",
 		"@tanstack/react-form": "^1.15.0",

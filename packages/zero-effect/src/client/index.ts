@@ -8,6 +8,7 @@ import type {
 	CustomMutatorDefs,
 	Transaction,
 	Schema as ZeroSchema,
+	SchemaQuery,
 } from "@rocicorp/zero"
 import { Effect, Runtime } from "effect"
 import {
@@ -41,6 +42,39 @@ export type CustomMutatorEfDefs<TSchema extends ZeroSchema, R = never> = {
 /**
  * @since 1.0.0
  * @category models
+ */
+type SchemaCRUD<S extends ZeroSchema> = {
+	[Table in keyof S['tables']]: {
+		insert: (value: any) => Promise<void>
+		upsert: (value: any) => Promise<void>
+		update: (value: any) => Promise<void>
+		delete: (id: any) => Promise<void>
+	}
+}
+
+/**
+ * @since 1.0.0
+ * @category models
+ */
+type EffectSchemaCRUD<TSchema extends ZeroSchema> = {
+	[K in keyof TSchema["tables"]]: {
+		[Method in keyof SchemaCRUD<TSchema>[K]]: SchemaCRUD<TSchema>[K][Method] extends (
+			...args: infer Args
+		) => Promise<infer R>
+			? (...args: Args) => Effect.Effect<R, ZeroMutatorDatabaseError>
+			: never
+	}
+}
+
+/**
+ * @since 1.0.0
+ * @category models
+ */
+type EffectSchemaQuery<TSchema extends ZeroSchema> = SchemaQuery<TSchema>
+
+/**
+ * @since 1.0.0
+ * @category models
  * @example
  * ```ts
  * const updatePerson = (tx: EffectTransaction<Schema>, input: UpdateInput) =>
@@ -62,12 +96,12 @@ export class EffectTransaction<TSchema extends ZeroSchema> {
 		this.tx = tx
 	}
 
-	get mutate() {
-		return this.createMutateProxy(this.tx.mutate)
+	get mutate(): EffectSchemaCRUD<TSchema> {
+		return this.createMutateProxy(this.tx.mutate) as EffectSchemaCRUD<TSchema>
 	}
 
-	get query() {
-		return this.createQueryProxy(this.tx.query)
+	get query(): EffectSchemaQuery<TSchema> {
+		return this.createQueryProxy(this.tx.query) as EffectSchemaQuery<TSchema>
 	}
 
 	private createMutateProxy(mutate: any): any {

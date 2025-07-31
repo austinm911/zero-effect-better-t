@@ -5,14 +5,15 @@ import {
 	HttpLayerRouter,
 	HttpServer,
 } from "@effect/platform"
-
 import { Layer } from "effect"
+import { Database } from "@/db/client"
 import { ZeroHandlerLive } from "../handlers/zero"
 import { ZeroMutatorsApi } from "../index"
 
 // Create the handlers layer with basic dependencies
 const HandlersLayer = Layer.mergeAll(ZeroHandlerLive).pipe(
 	Layer.provide(FetchHttpClient.layer),
+	Layer.provide(Database.Live),
 )
 
 // Create the Zero HTTP API route using HttpLayerRouter

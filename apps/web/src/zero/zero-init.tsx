@@ -20,7 +20,6 @@ export function ZeroInit({ children }: { children: React.ReactNode }) {
 			userID: user,
 			auth: undefined,
 			server: env.VITE_PUBLIC_SERVER,
-			// TODO: Fix lack of type inference e.g. `create: (tx: EffectTransaction<ZeroSchema>, input: any) => Effect<any, unknown, unknown>;`
 			mutators: createClientMutators({
 				userId: user,
 			}),
@@ -39,7 +38,7 @@ export function ZeroInit({ children }: { children: React.ReactNode }) {
 		}
 	}, [router])
 
-	// TODO: Fix type error
+	// @ts-expect-error - Zero types need fixing for custom mutators
 	return <ZeroProvider {...opts}>{children}</ZeroProvider>
 }
 

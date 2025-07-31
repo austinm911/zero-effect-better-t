@@ -13,6 +13,8 @@
     "apps/web": {
       "name": "web",
       "dependencies": {
+        "@effect/platform": "catalog:",
+        "@faker-js/faker": "catalog:",
         "@rocicorp/zero": "catalog:",
         "@tailwindcss/vite": "^4.1.11",
         "@tanstack/react-form": "^1.15.0",
@@ -21,13 +23,17 @@
         "@tanstack/react-router-with-query": "^1.130.2",
         "@tanstack/react-start": "catalog:frontend",
         "@tanstack/router-plugin": "^1.130.2",
+        "@types/pg": "^8.15.5",
         "@zero-effect/backend": "workspace:*",
         "@zero-effect/env": "workspace:*",
         "better-auth": "^1.3.4",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
+        "effect": "catalog:",
         "lucide-react": "^0.532.0",
         "next-themes": "^0.4.6",
+        "pg": "^8.16.3",
+        "postgres": "^3.4.7",
         "radix-ui": "^1.4.2",
         "react": "catalog:frontend",
         "react-dom": "catalog:frontend",
@@ -75,6 +81,7 @@
         "@effect/sql": "catalog:",
         "@effect/sql-drizzle": "catalog:",
         "@effect/sql-pg": "catalog:",
+        "@faker-js/faker": "catalog:",
         "@rocicorp/zero": "catalog:",
         "@zero-effect/env": "workspace:*",
         "@zero-effect/zero-effect": "workspace:*",
@@ -144,6 +151,7 @@
     "@effect/sql": "^0.44.0",
     "@effect/sql-drizzle": "^0.43.0",
     "@effect/sql-pg": "^0.45.0",
+    "@faker-js/faker": "^9.4.1",
     "@rocicorp/zero": "^0.22.2025072801",
     "@turbo/gen": "^2.5.5",
     "alchemy": "^0.55.2",
@@ -517,6 +525,8 @@
     "@esbuild/win32-ia32": ["@esbuild/win32-ia32@0.25.5", "", { "os": "win32", "cpu": "ia32" }, "sha512-onOJ02pqs9h1iMJ1PQphR+VZv8qBMQ77Klcsqv9CNW2w6yLqoURLcgERAIurY6QE63bbLuqgP9ATqajFLK5AMQ=="],
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.25.5", "", { "os": "win32", "cpu": "x64" }, "sha512-TXv6YnJ8ZMVdX+SXWVBo/0p8LTcrUYngpWjvm91TMjjBQii7Oz11Lw5lbDV5Y0TzuhSJHwiH4hEtC1I42mMS0g=="],
+
+    "@faker-js/faker": ["@faker-js/faker@9.9.0", "", {}, "sha512-OEl393iCOoo/z8bMezRlJu+GlRGlsKbUAN7jKB6LhnKoqKve5DXRpalbItIIcwnCjs1k/FOPjFzcA6Qn+H+YbA=="],
 
     "@fastify/ajv-compiler": ["@fastify/ajv-compiler@4.0.2", "", { "dependencies": { "ajv": "^8.12.0", "ajv-formats": "^3.0.1", "fast-uri": "^3.0.0" } }, "sha512-Rkiu/8wIjpsf46Rr+Fitd3HRP+VsxUFDDeag0hs9L0ksfnwx2g7SPQQTFL0E8Qv+rfXzQOxBJnjUB9ITUDjfWQ=="],
 

@@ -4,7 +4,7 @@ import {
 	type PermissionsConfig,
 	type Zero as ZeroType,
 } from "@rocicorp/zero"
-import type { ClientMutators } from "../mutators/client"
+import type { Mutators } from "../mutators/client"
 import { type Schema, schema } from "../schema/schema.gen"
 
 // ----------------------
@@ -21,7 +21,7 @@ export {
 export { type Schema, schema } from "../schema/schema.gen"
 
 // TODO: Fix this type issue
-export type Zero = ZeroType<Schema, ClientMutators>
+export type Zero = ZeroType<Schema, Mutators>
 export type ZeroTableNames = keyof Schema["tables"]
 
 // ----------------------
@@ -38,5 +38,10 @@ export const permissions = definePermissions<AuthData, Schema>(schema, () => {
 		user: ANYONE_CAN_DO_ANYTHING,
 		session: ANYONE_CAN_DO_ANYTHING,
 		account: ANYONE_CAN_DO_ANYTHING,
+
+		// Blog Tables
+		posts: ANYONE_CAN_DO_ANYTHING,
+		tags: ANYONE_CAN_DO_ANYTHING,
+		postTags: ANYONE_CAN_DO_ANYTHING,
 	} satisfies PermissionsConfig<AuthData, Schema>
 })

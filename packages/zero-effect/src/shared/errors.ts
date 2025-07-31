@@ -11,7 +11,7 @@ import { Schema } from "effect"
 export class ZeroMutatorAuthError extends Schema.TaggedError<ZeroMutatorAuthError>()(
 	"ZeroMutatorAuthError",
 	{
-		cause: Schema.Defect,
+		cause: Schema.Defect.pipe(Schema.optional),
 		message: Schema.String,
 	},
 ) {}

@@ -74,7 +74,7 @@ import type {
 import type { DBConnection, DBTransaction, Row } from "@rocicorp/zero/pg"
 import { PushProcessor, ZQLDatabase } from "@rocicorp/zero/pg"
 import type { PgRemoteDatabase } from "drizzle-orm/pg-proxy"
-import { Effect, type Layer, Runtime } from "effect"
+import { Context, Effect, Layer, Runtime } from "effect"
 import {
 	type CustomMutatorEfDefs,
 	convertEffectMutatorsToPromise,
@@ -396,7 +396,7 @@ export function zeroEffectDrizzleProcessor<TSchema extends Schema, R = never>(
  * @since 1.0.0
  * @category symbols
  */
-export const TypeId: unique symbol = Symbol.for("@zero-effect/ZeroStore")
+export const TypeId: unique symbol = Symbol.for("@zero-effect/DrizzleZeroStore")
 
 /**
  * @since 1.0.0
@@ -404,26 +404,60 @@ export const TypeId: unique symbol = Symbol.for("@zero-effect/ZeroStore")
  */
 export type TypeId = typeof TypeId
 
-export interface ZeroStore {
+/**
+ * Core Zero Store Interface for Drizzle Integration
+ *
+ * This interface defines the main entry point for Zero's real-time synchronization
+ * system when using Drizzle as the database adapter. It provides a factory method
+ * to create schema-specific stores that handle mutation processing and real-time sync.
+ *
+ * ## Purpose and Design
+ *
+ * The `ZeroStore` serves as:
+ * - **Schema Factory**: Creates `ZeroSchemaStore` instances for specific database schemas
+ * - **Service Interface**: Provides a clean API for dependency injection systems
+ * - **Type Safety**: Ensures schema-specific operations are properly typed
+ * - **Resource Management**: Manages underlying database connections and processors
+ *
+ * ## Integration with Zero's Architecture
+ *
+ * This interface mirrors Zero's built-in store interfaces but is specifically designed
+ * for Drizzle integration. It maintains the same API surface while using Drizzle's
+ * `PgRemoteDatabase` instead of raw `pg` client types.
+ *
+ * ## Usage Pattern
+ *
+ * ```typescript
+ * const zeroStore = yield* EffectDrizzleZeroStore
+ * const schemaStore = zeroStore.forSchema(mySchema)
+ * const result = yield* schemaStore.processMutations(mutators, params, payload)
+ * ```
+ *
+ * @since 1.0.0
+ * @category interfaces
+ */
+export interface EffectDrizzleZeroStore {
 	readonly [TypeId]: TypeId
 	readonly forSchema: <TSchema extends Schema>(
 		schema: TSchema,
-	) => ZeroSchemaStore<TSchema>
+	) => EffectDrizzleZeroSchemaStore<TSchema>
 }
 
 /**
  * @since 1.0.0
  * @category models
  */
-export declare namespace ZeroStore {
-	export type AnyStore = ZeroStore | ZeroSchemaStore<any>
+export declare namespace EffectDrizzleZeroStore {
+	export type AnyStore =
+		| EffectDrizzleZeroStore
+		| EffectDrizzleZeroSchemaStore<any>
 }
 
 /**
  * @since 1.0.0
  * @category symbols
  */
-export const EffectDrizzleZeroStoreTypeId: unique symbol = Symbol.for(
+export const DrizzleZeroStoreTypeId: unique symbol = Symbol.for(
 	"@zero-effect/EffectDrizzleZeroStore",
 )
 
@@ -431,25 +465,61 @@ export const EffectDrizzleZeroStoreTypeId: unique symbol = Symbol.for(
  * @since 1.0.0
  * @category symbols
  */
-export type EffectDrizzleZeroStoreTypeId = typeof EffectDrizzleZeroStoreTypeId
+export type DrizzleZeroStoreTypeId = typeof DrizzleZeroStoreTypeId
 
 /**
+ * Schema-Specific Zero Store for Drizzle Integration
+ *
+ * This interface represents a Zero store configured for a specific database schema
+ * using Drizzle as the database adapter. It provides direct access to Zero's core
+ * components and the main mutation processing pipeline.
+ *
+ * ## Core Components
+ *
+ * - **`database`**: Zero's `ZQLDatabase` instance that handles schema analysis,
+ *   change tracking, and query processing for real-time synchronization
+ * - **`processor`**: Zero's `PushProcessor` that manages the complete mutation
+ *   lifecycle including validation, execution, and event generation
+ * - **`processMutations`**: Main entry point for processing client mutations
+ *   with full real-time sync capabilities
+ *
+ * ## Drizzle-Specific Design
+ *
+ * This interface is specifically designed for Drizzle integration:
+ * - Uses `PgRemoteDatabase` type instead of raw `pg` client types
+ * - Maintains compatibility with Zero's mutation processing pipeline
+ * - Supports Effect-based mutators with automatic Promise conversion
+ * - Provides the same functionality as Zero's built-in postgres adapter
+ *
+ * ## Mutation Processing Pipeline
+ *
+ * The `processMutations` method handles the complete mutation lifecycle:
+ * 1. **Effect → Promise Conversion**: Adapts Effect mutators to Zero's API
+ * 2. **Schema Validation**: Ensures mutations conform to your database schema
+ * 3. **Atomic Execution**: Runs mutations within database transactions
+ * 4. **Change Tracking**: Records modifications for real-time synchronization
+ * 5. **Event Generation**: Creates update events for connected clients
+ * 6. **Error Handling**: Provides detailed error information and rollback
+ *
+ * ## Usage in Request Handlers
+ *
+ * ```typescript
+ * const schemaStore = zeroStore.forSchema(mySchema)
+ *
+ * // Process mutations from Zero clients
+ * const result = yield* schemaStore.processMutations(
+ *   myEffectMutators,
+ *   requestUrlParams,
+ *   mutationPayload
+ * )
+ * ```
+ *
+ * @template TSchema - The Zero schema type this store is configured for
  * @since 1.0.0
- * @category symbols
+ * @category interfaces
  */
-export const EffectDrizzleZeroSchemaStoreTypeId: unique symbol = Symbol.for(
-	"@zero-effect/EffectDrizzleZeroSchemaStore",
-)
-
-/**
- * @since 1.0.0
- * @category symbols
- */
-export type EffectDrizzleZeroSchemaStoreTypeId =
-	typeof EffectDrizzleZeroSchemaStoreTypeId
-
-export interface ZeroSchemaStore<TSchema extends Schema> {
-	readonly [EffectDrizzleZeroSchemaStoreTypeId]: EffectDrizzleZeroSchemaStoreTypeId
+export interface EffectDrizzleZeroSchemaStore<TSchema extends Schema> {
+	readonly [DrizzleZeroStoreTypeId]: DrizzleZeroStoreTypeId
 	readonly database: ZQLDatabase<TSchema, PgRemoteDatabase>
 	readonly processor: PushProcessor<
 		ZQLDatabase<TSchema, PgRemoteDatabase>,
@@ -461,6 +531,17 @@ export interface ZeroSchemaStore<TSchema extends Schema> {
 		payload: ReadonlyJSONObject,
 	) => Effect.Effect<any, ZeroMutationProcessingError, R>
 }
+
+/**
+ * @since 1.0.0
+ * @category tags
+ */
+export const EffectDrizzleZeroStore: Context.Tag<
+	EffectDrizzleZeroStore,
+	EffectDrizzleZeroStore
+> = Context.GenericTag<EffectDrizzleZeroStore>(
+	"@zero-effect/EffectDrizzleZeroStore",
+)
 
 /**
  * Effect Service for Zero's Real-Time Sync with Drizzle Integration
@@ -514,20 +595,20 @@ export interface ZeroSchemaStore<TSchema extends Schema> {
  * @since 1.0.0
  * @category services
  */
-export class EffectDrizzleZeroStore extends Effect.Service<EffectDrizzleZeroStore>()(
-	"@zero-effect/EffectDrizzleZeroStore",
-	{
-		effect: Effect.gen(function* () {
-			const drizzle = yield* Pg.PgDrizzle
-			const sqlClient = yield* SqlClient.SqlClient
-			const runtime = yield* Effect.runtime<never>()
+// export class EffectDrizzleZeroStore extends Effect.Service<EffectDrizzleZeroStore>()(
+// 	"@zero-effect/DrizzleZeroStore",
+// 	{
+// 		effect: Effect.gen(function* () {
+// 			const drizzle = yield* Pg.PgDrizzle
+// 			const sqlClient = yield* SqlClient.SqlClient
+// 			const runtime = yield* Effect.runtime<never>()
 
-			return makeDrizzleStore(drizzle, sqlClient, runtime)
-		}),
-	},
-) {
-	static readonly _tag = "@zero-effect/EffectDrizzleZeroStore" as const
-}
+// 			return make(drizzle, sqlClient, runtime)
+// 		}),
+// 	},
+// ) {
+// 	static readonly _tag = "@zero-effect/DrizzleZeroStore" as const
+// }
 
 /**
  * Factory function to create a Zero store with Drizzle database adapter
@@ -567,15 +648,15 @@ export class EffectDrizzleZeroStore extends Effect.Service<EffectDrizzleZeroStor
  * @since 1.0.0
  * @category constructors
  */
-const makeDrizzleStore = (
+const make = (
 	drizzle: PgRemoteDatabase,
 	sqlClient: SqlClient.SqlClient,
 	runtime: Runtime.Runtime<never>,
-): ZeroStore => ({
+): EffectDrizzleZeroStore => ({
 	[TypeId]: TypeId,
 	forSchema: <TSchema extends Schema>(
 		schema: TSchema,
-	): ZeroSchemaStore<TSchema> => {
+	): EffectDrizzleZeroSchemaStore<TSchema> => {
 		const database = zeroEffectDrizzle(schema, drizzle, sqlClient, runtime)
 		const processor = zeroEffectDrizzleProcessor(
 			schema,
@@ -585,7 +666,7 @@ const makeDrizzleStore = (
 		)
 
 		return {
-			[EffectDrizzleZeroSchemaStoreTypeId]: EffectDrizzleZeroSchemaStoreTypeId,
+			[DrizzleZeroStoreTypeId]: DrizzleZeroStoreTypeId,
 			database,
 			processor,
 			/**
@@ -634,6 +715,29 @@ const makeDrizzleStore = (
 })
 
 /**
+ * Convenience function to create a Drizzle-based Zero store without Effect services
+ *
+ * This function allows creating a ZeroStore directly from Drizzle and SqlClient
+ * instances, useful for testing or when not using Effect's service system.
+ *
+ * For production use, prefer the `EffectDrizzleZeroStore` service which handles
+ * dependency injection and resource management automatically.
+ *
+ * @param drizzle - Drizzle database instance
+ * @param sqlClient - SQL client for raw queries
+ * @param runtime - Effect runtime for operations
+ * @returns ZeroStore instance configured for Drizzle
+ *
+ * @since 1.0.0
+ * @category constructors
+ */
+export const makeEffectDrizzleStore = (
+	drizzle: PgRemoteDatabase,
+	sqlClient: SqlClient.SqlClient,
+	runtime: Runtime.Runtime<never>,
+): EffectDrizzleZeroStore => make(drizzle, sqlClient, runtime)
+
+/**
  * Layer that provides the Effect-SQL Drizzle Zero store
  *
  * This layer automatically resolves the required dependencies and provides
@@ -669,31 +773,18 @@ const makeDrizzleStore = (
  * )
  * ```
  */
-export const EffectDrizzleZeroStoreLive: Layer.Layer<
-	EffectDrizzleZeroStore,
-	never,
-	Pg.PgDrizzle | SqlClient.SqlClient
-> = EffectDrizzleZeroStore.Default
+// export const DrizzleZeroStoreLive: Layer.Layer<
+// 	EffectDrizzleZeroStore,
+// 	never,
+// 	Pg.PgDrizzle | SqlClient.SqlClient
+// > = EffectDrizzleZeroStore.Default
 
-/**
- * Convenience function to create a Drizzle-based Zero store without Effect services
- *
- * This function allows creating a ZeroStore directly from Drizzle and SqlClient
- * instances, useful for testing or when not using Effect's service system.
- *
- * For production use, prefer the `EffectDrizzleZeroStore` service which handles
- * dependency injection and resource management automatically.
- *
- * @param drizzle - Drizzle database instance
- * @param sqlClient - SQL client for raw queries
- * @param runtime - Effect runtime for operations
- * @returns ZeroStore instance configured for Drizzle
- *
- * @since 1.0.0
- * @category constructors
- */
-export const makeEffectDrizzleStore = (
-	drizzle: PgRemoteDatabase,
-	sqlClient: SqlClient.SqlClient,
-	runtime: Runtime.Runtime<never>,
-): ZeroStore => makeDrizzleStore(drizzle, sqlClient, runtime)
+export const EffectDrizzleZeroStoreLive = Layer.effect(
+	EffectDrizzleZeroStore,
+	Effect.gen(function* () {
+		const drizzle = yield* Pg.PgDrizzle
+		const sqlClient = yield* SqlClient.SqlClient
+		const runtime = yield* Effect.runtime<never>()
+		return make(drizzle, sqlClient, runtime)
+	}),
+)

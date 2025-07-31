@@ -1,7 +1,7 @@
 import { HttpApiBuilder } from "@effect/platform"
 import type { ReadonlyJSONObject } from "@rocicorp/zero"
 import { Effect, Layer } from "effect"
-import { createClientMutators } from "@/zero/mutators/client"
+import { createMutators } from "@/zero/client-mutators"
 import { MutatorError, ZeroMutatorsApi } from "../index"
 import { AppZeroStore, ZeroLive } from "../live/zero"
 
@@ -27,7 +27,7 @@ export const ZeroHandlerLive = HttpApiBuilder.group(
 				// ✅ Process local mutations first (SAME as current)
 				const result = yield* appZeroStore
 					.processMutations(
-						createClientMutators(authData), // Clean mutators - local only
+						createMutators(authData), // Clean mutators - local only
 						input.urlParams,
 						// Have to cast it to ReadonlyJSONObject because the PushProcessor expects a JSON object
 						input.payload as unknown as ReadonlyJSONObject,
