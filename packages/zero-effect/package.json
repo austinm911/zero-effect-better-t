@@ -2,8 +2,7 @@
 	"name": "@zero-effect/zero-effect",
 	"main": "src/index.ts",
 	"exports": {
-		".": "./src/index.ts",
-		"./client": "./src/client/index.ts",
+		"./*": "./src/*.ts",
 		"./server/*": "./src/server/*.ts",
 		"./shared/*": "./src/shared/*.ts"
 	},
@@ -19,12 +18,12 @@
 	},
 	"dependencies": {
 		"@effect/sql": "catalog:",
-		"drizzle-orm": "catalog:",
 		"@effect/sql-drizzle": "catalog:",
 		"@effect/sql-pg": "catalog:",
 		"@rocicorp/zero": "catalog:",
 		"@zero-effect/effect-test": "workspace:*",
 		"@zero-effect/env": "workspace:*",
+		"drizzle-orm": "catalog:",
 		"effect": "catalog:"
 	},
 	"devDependencies": {

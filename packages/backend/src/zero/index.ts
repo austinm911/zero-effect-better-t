@@ -1,2 +1,2 @@
-export * from "./mutators/client"
+export * from "./client-mutators"
 export * from "./schema"

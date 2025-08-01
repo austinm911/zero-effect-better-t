@@ -1,14 +1,10 @@
 {
 	"$schema": "https://turbo.build/schema.json",
-	"ui": "tui",
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": ["dist/**"]
-		},
-		"lint": {
-			"dependsOn": ["^lint"]
 		},
 		"check": {
 			"cache": false
@@ -16,31 +12,14 @@
 		"check-types": {
 			"dependsOn": ["^check-types"]
 		},
-		"dev:backend": {
-			"dependsOn": ["db:watch", "zero:cache", "db:studio"],
+		"clean": {
+			"cache": false
+		},
+		"db:generate": {
 			"cache": false,
 			"persistent": true
 		},
-		"db:start": {
-			"cache": false
-		},
-		"db:watch": {
-			"cache": false
-		},
-		"zero:cache": {
-			"dependsOn": ["db:start"],
-			"cache": false
-		},
-		"db:studio": {
-			"dependsOn": ["db:start"],
-			"cache": false
-		},
-		"dev:frontend": {
-			"dependsOn": ["@zero-effect/web#dev"],
-			"cache": false,
-			"persistent": true
-		},
-		"dev": {
+		"db:migrate": {
 			"cache": false,
 			"persistent": true
 		},
@@ -52,20 +31,41 @@
 			"cache": false,
 			"persistent": true
 		},
-		"db:migrate": {
-			"cache": false,
-			"persistent": true
-		},
-		"db:generate": {
-			"cache": false,
-			"persistent": true
+		"db:start": {
+			"cache": false
 		},
 		"db:stop": {
 			"cache": false,
 			"persistent": true
 		},
-		"clean": {
+		"db:studio": {
+			"cache": false,
+			"dependsOn": ["db:start"]
+		},
+		"db:watch": {
 			"cache": false
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"dev:backend": {
+			"cache": false,
+			"dependsOn": ["db:watch", "zero:cache", "db:studio"],
+			"persistent": true
+		},
+		"dev:frontend": {
+			"cache": false,
+			"dependsOn": ["@zero-effect/web#dev"],
+			"persistent": true
+		},
+		"lint": {
+			"dependsOn": ["^lint"]
+		},
+		"zero:cache": {
+			"cache": false,
+			"dependsOn": ["db:start"]
 		}
-	}
+	},
+	"ui": "tui"
 }

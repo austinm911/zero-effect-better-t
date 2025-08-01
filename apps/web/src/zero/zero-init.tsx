@@ -1,15 +1,9 @@
-import type { Zero } from "@rocicorp/zero"
 import { ZeroProvider } from "@rocicorp/zero/react"
 import { useRouter } from "@tanstack/react-router"
-import {
-	createClientMutators,
-	type Schema,
-	schema,
-} from "@zero-effect/backend/zero"
+import type { ZeroClient } from "@zero-effect/backend/zero"
+import { createClientMutators, schema } from "@zero-effect/backend/zero"
 import { env } from "@zero-effect/env/client"
 import { useMemo } from "react"
-
-const user = "user_123"
 
 export function ZeroInit({ children }: { children: React.ReactNode }) {
 	const router = useRouter()
@@ -17,13 +11,11 @@ export function ZeroInit({ children }: { children: React.ReactNode }) {
 	const opts = useMemo(() => {
 		return {
 			schema,
-			userID: user,
+			userID: "anon",
 			auth: undefined,
 			server: env.VITE_PUBLIC_SERVER,
-			mutators: createClientMutators({
-				userId: user,
-			}),
-			init: (zero: Zero<Schema>) => {
+			mutators: createClientMutators(undefined),
+			init: (zero: ZeroClient) => {
 				router.update({
 					context: {
 						...router.options.context,
@@ -31,18 +23,18 @@ export function ZeroInit({ children }: { children: React.ReactNode }) {
 					},
 				})
 
-				router.invalidate()
+				// TODO getting infinite loop here
+				// router.invalidate()
 
 				preload(zero)
 			},
 		}
 	}, [router])
 
-	// @ts-expect-error - Zero types need fixing for custom mutators
 	return <ZeroProvider {...opts}>{children}</ZeroProvider>
 }
 
-function preload(_z: Zero<Schema>) {
+function preload(_z: ZeroClient) {
 	// Delay preload() slightly to avoid blocking UI on first run. We don't need
 	// this data to display the UI, it's used by search.
 	setTimeout(() => {

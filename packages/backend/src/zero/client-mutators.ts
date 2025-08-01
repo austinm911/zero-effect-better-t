@@ -1,19 +1,11 @@
-/**
- * Database-free client mutators for zero-effect
- *
- * These mutators are shared between all implementations and contain NO database code.
- * They are safe for client bundles and use only Zero's Transaction API.
- *
- * @since 1.0.0
- */
-
-import type { CustomMutatorDefs } from "@rocicorp/zero"
-import type { EffectTransaction } from "@zero-effect/zero-effect/client"
 import {
 	convertEffectMutatorsToPromise,
+	type EffectTransaction,
+} from "@zero-effect/zero-effect/client"
+import {
 	ZeroMutatorAuthError,
 	ZeroMutatorValidationError,
-} from "@zero-effect/zero-effect/client"
+} from "@zero-effect/zero-effect/shared/errors"
 import { Effect, Runtime, Schema } from "effect"
 import { insertPostSchema, selectPostSchema } from "@/db/schema"
 import type { Schema as ZeroSchema } from "@/zero/schema/schema.gen"
@@ -33,19 +25,19 @@ import type { AuthData } from "./schema"
 export function createMutators(authData: AuthData | undefined) {
 	return {
 		posts: {
-			insert: (
+			add: (
 				tx: EffectTransaction<ZeroSchema>,
-				input: typeof insertPostSchema,
+				input: typeof insertPostSchema.Type,
 			) =>
 				Effect.gen(function* () {
 					// 1. Authentication check
-					if (!authData) {
-						return yield* Effect.fail(
-							new ZeroMutatorAuthError({
-								message: "Not authenticated",
-							}),
-						)
-					}
+					// if (!authData) {
+					// 	return yield* Effect.fail(
+					// 		new ZeroMutatorAuthError({
+					// 			message: "Not authenticated",
+					// 		}),
+					// 	)
+					// }
 
 					// 2. Input validation using custom schema
 					const validatedInput = yield* Schema.decodeUnknown(insertPostSchema)(
@@ -70,11 +62,11 @@ export function createMutators(authData: AuthData | undefined) {
 
 					// 4. Client-side logging
 					yield* Effect.log("Post created (client-side)", {
-						userId: authData.userId,
+						userId: authData?.userId,
 					})
 				}),
 
-			delete: (
+			remove: (
 				tx: EffectTransaction<ZeroSchema>,
 				// We only need the id from the schema
 				input: (typeof selectPostSchema.Type)["id"],
@@ -110,26 +102,19 @@ export function createMutators(authData: AuthData | undefined) {
 						id: validatedInput.id,
 						userId: authData.userId,
 					})
-				}) as Effect.Effect<
-					void,
-					ZeroMutatorAuthError | ZeroMutatorValidationError,
-					never
-				>,
+				}),
 		},
 	}
 }
 
 /**
  * Create client mutators by converting Effect generators to Promises
- *
- * @since 1.0.0
- * @category constructors
  */
-export function createClientMutators(
-	authData: AuthData | undefined,
-): CustomMutatorDefs<ZeroSchema> {
+export function createClientMutators(authData: AuthData | undefined) {
 	const effectMutators = createMutators(authData)
+	// `Runtime.provideService` can be used to provide services to the Effect runtime
 	const clientRuntime = Runtime.defaultRuntime
+
 	return convertEffectMutatorsToPromise(effectMutators, clientRuntime)
 }
 

@@ -20,14 +20,10 @@ export const ZeroHandlerLive = HttpApiBuilder.group(
 					input.payload.mutations,
 				)
 
-				const authData = {
-					userId: "123",
-				}
-
 				// ✅ Process local mutations first (SAME as current)
 				const result = yield* appZeroStore
 					.processMutations(
-						createMutators(authData), // Clean mutators - local only
+						createMutators(undefined),
 						input.urlParams,
 						// Have to cast it to ReadonlyJSONObject because the PushProcessor expects a JSON object
 						input.payload as unknown as ReadonlyJSONObject,

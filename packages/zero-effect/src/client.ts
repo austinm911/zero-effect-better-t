@@ -6,9 +6,9 @@
 
 import type {
 	CustomMutatorDefs,
+	SchemaQuery,
 	Transaction,
 	Schema as ZeroSchema,
-	SchemaQuery,
 } from "@rocicorp/zero"
 import { Effect, Runtime } from "effect"
 import {
@@ -16,7 +16,7 @@ import {
 	ZeroMutatorAuthError,
 	ZeroMutatorDatabaseError,
 	ZeroMutatorValidationError,
-} from "../shared/errors"
+} from "./shared/errors"
 
 // Re-export error types for convenience
 export {
@@ -30,7 +30,7 @@ export {
  * @since 1.0.0
  * @category models
  */
-export type CustomMutatorEfDefs<TSchema extends ZeroSchema, R = never> = {
+export type CustomMutatorEfDefs<TSchema extends ZeroSchema, R = unknown> = {
 	[TableName in keyof TSchema["tables"]]?: {
 		[MutatorName: string]: (
 			tx: EffectTransaction<TSchema>,
@@ -44,7 +44,7 @@ export type CustomMutatorEfDefs<TSchema extends ZeroSchema, R = never> = {
  * @category models
  */
 type SchemaCRUD<S extends ZeroSchema> = {
-	[Table in keyof S['tables']]: {
+	[Table in keyof S["tables"]]: {
 		insert: (value: any) => Promise<void>
 		upsert: (value: any) => Promise<void>
 		update: (value: any) => Promise<void>
@@ -94,6 +94,23 @@ export class EffectTransaction<TSchema extends ZeroSchema> {
 
 	constructor(tx: Transaction<TSchema>) {
 		this.tx = tx
+	}
+
+	// Add missing properties required by ClientTransaction
+	get location() {
+		return this.tx.location
+	}
+
+	get reason() {
+		return this.tx.reason
+	}
+
+	get clientID() {
+		return this.tx.clientID
+	}
+
+	get mutationID() {
+		return this.tx.mutationID
 	}
 
 	get mutate(): EffectSchemaCRUD<TSchema> {
@@ -163,7 +180,7 @@ export const createEffectTransaction = <TSchema extends ZeroSchema>(
  * @since 1.0.0
  * @category models
  */
-type EffectMutators<_TSchema extends ZeroSchema, R> = Record<
+type EffectMutators<_TSchema extends ZeroSchema, R = unknown> = Record<
 	string,
 	| Record<string, (tx: any, ...args: Array<any>) => Effect.Effect<any, any, R>>
 	| undefined
@@ -193,11 +210,9 @@ export function convertEffectMutatorsToPromise<TSchema extends ZeroSchema, R>(
 	effectMutators: EffectMutators<TSchema, R>,
 	runtime: Runtime.Runtime<R>,
 ): CustomMutatorDefs<TSchema> {
-	const promiseMutators: any = {}
+	const promiseMutators: Record<string, Record<string, any>> = {}
 
-	for (const [tableName, tableMutators] of Object.entries(
-		effectMutators as Record<string, any>,
-	)) {
+	for (const [tableName, tableMutators] of Object.entries(effectMutators)) {
 		if (tableMutators) {
 			promiseMutators[tableName] = {}
 

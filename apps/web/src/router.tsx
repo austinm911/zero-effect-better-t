@@ -1,11 +1,11 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router"
 import Loader from "./components/loader"
 import "./index.css"
-import type { Zero } from "@zero-effect/backend/zero"
+import type { ZeroClient } from "@zero-effect/backend/zero"
 import { routeTree } from "./routeTree.gen"
 
 export interface RouterContext {
-	zero: Zero
+	zero: ZeroClient
 }
 
 export const createRouter = () => {
@@ -14,7 +14,7 @@ export const createRouter = () => {
 		scrollRestoration: true,
 		defaultPreloadStaleTime: 0,
 		context: {
-			zero: undefined as unknown as Zero, // populated in ZeroInit
+			zero: undefined as unknown as ZeroClient, // populated in ZeroInit
 		} satisfies RouterContext,
 		defaultPendingComponent: () => <Loader />,
 		defaultNotFoundComponent: () => <div>Not Found</div>,

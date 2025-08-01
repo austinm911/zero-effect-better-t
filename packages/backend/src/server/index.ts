@@ -111,4 +111,4 @@ export const ZeroMutatorsGroup = HttpApiGroup.make("zero").add(
 // Define the complete HTTP API
 export class ZeroMutatorsApi extends HttpApi.make("zero")
 	.add(ZeroMutatorsGroup)
-	.prefix("/api/api") {}
+	.prefix("/api") {}

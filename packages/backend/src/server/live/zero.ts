@@ -1,8 +1,8 @@
 import {
-	type EffectDrizzleZeroSchemaStore,
-	EffectDrizzleZeroStore,
-} from "@zero-effect/zero-effect"
-import { EffectDrizzleZeroStoreLive } from "@zero-effect/zero-effect/server/drizzle-effect"
+	type ZeroSchemaStore,
+	ZeroStore,
+	ZeroStoreLive,
+} from "@zero-effect/zero-effect/server/pg"
 import { Context, Effect, Layer } from "effect"
 import { schema } from "../../zero"
 
@@ -11,7 +11,7 @@ import { schema } from "../../zero"
  */
 export class AppZeroStore extends Context.Tag(
 	"@zero-effect/server/AppZeroStore",
-)<AppZeroStore, EffectDrizzleZeroSchemaStore<typeof schema>>() {}
+)<AppZeroStore, ZeroSchemaStore<typeof schema>>() {}
 
 /**
  * Live implementation that creates a schema-specific Zero store
@@ -19,7 +19,7 @@ export class AppZeroStore extends Context.Tag(
 export const AppZeroStoreLive = Layer.effect(
 	AppZeroStore,
 	Effect.gen(function* () {
-		const zeroStore = yield* EffectDrizzleZeroStore
+		const zeroStore = yield* ZeroStore
 		return zeroStore.forSchema(schema)
 	}),
 )
@@ -27,7 +27,4 @@ export const AppZeroStoreLive = Layer.effect(
 /**
  * Combined layer that provides the schema-specific Zero store
  */
-export const ZeroLive = Layer.provide(
-	AppZeroStoreLive,
-	EffectDrizzleZeroStoreLive,
-)
+export const ZeroLive = Layer.provide(AppZeroStoreLive, ZeroStoreLive)

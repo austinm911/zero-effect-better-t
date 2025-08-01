@@ -3,32 +3,9 @@
  * @since 1.0.0
  */
 /** biome-ignore-all lint/suspicious/noExplicitAny: <> */
-import type { ReadonlyJSONObject, Schema } from "@rocicorp/zero"
+import type { Schema } from "@rocicorp/zero"
 import type { Effect } from "effect"
-import type { CustomMutatorEfDefs, EffectTransaction } from "../client"
-import type { ZeroMutationProcessingError } from "./errors"
-
-/**
- * @since 1.0.0
- * @category models
- */
-export interface ZeroSchemaStore<TSchema extends Schema> {
-	readonly processMutations: <R>(
-		effectMutators: CustomMutatorEfDefs<TSchema, R>,
-		urlParams: Record<string, string>,
-		payload: ReadonlyJSONObject,
-	) => Effect.Effect<any, ZeroMutationProcessingError, R>
-}
-
-/**
- * @since 1.0.0
- * @category models
- */
-export interface ZeroStore {
-	readonly forSchema: <TSchema extends Schema>(
-		schema: TSchema,
-	) => ZeroSchemaStore<TSchema>
-}
+import type { EffectTransaction } from "../client"
 
 /**
  * @since 1.0.0

@@ -5,7 +5,7 @@ import { ServerLive } from "@zero-effect/backend/server/live/server"
 // Create the web handler using HttpLayerRouter.toWebHandler
 const { handler } = HttpLayerRouter.toWebHandler(ServerLive)
 
-export const ServerRoute = createServerFileRoute("/api/zero/push").methods({
+export const ServerRoute = createServerFileRoute("/api/$").methods({
 	async DELETE({ request }) {
 		return await handler(request)
 	},

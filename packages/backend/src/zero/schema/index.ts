@@ -4,8 +4,8 @@ import {
 	type PermissionsConfig,
 	type Zero as ZeroType,
 } from "@rocicorp/zero"
-import type { Mutators } from "../mutators/client"
-import { type Schema, schema } from "../schema/schema.gen"
+import type { Mutators } from "../client-mutators"
+import { type Schema, schema } from "./schema.gen"
 
 // ----------------------
 // Exports
@@ -20,8 +20,7 @@ export {
 
 export { type Schema, schema } from "../schema/schema.gen"
 
-// TODO: Fix this type issue
-export type Zero = ZeroType<Schema, Mutators>
+export type ZeroClient = ZeroType<Schema, Mutators>
 export type ZeroTableNames = keyof Schema["tables"]
 
 // ----------------------

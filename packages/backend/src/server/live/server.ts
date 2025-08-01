@@ -18,7 +18,7 @@ const HandlersLayer = Layer.mergeAll(ZeroHandlerLive).pipe(
 
 // Create the Zero HTTP API route using HttpLayerRouter
 export const HttpApiRoute = HttpLayerRouter.addHttpApi(ZeroMutatorsApi, {
-	openapiPath: "/api/api/openapi.json",
+	openapiPath: "/api/openapi.json",
 }).pipe(Layer.provide(HandlersLayer), Layer.provide(HttpServer.layerContext))
 
 export const ApiLive = HttpApiBuilder.api(ZeroMutatorsApi).pipe(
@@ -26,7 +26,7 @@ export const ApiLive = HttpApiBuilder.api(ZeroMutatorsApi).pipe(
 )
 
 export const SwaggerLayer = HttpApiSwagger.layer({
-	path: "/api/api/docs",
+	path: "/api/docs",
 }).pipe(Layer.provide(ApiLive))
 
 // Main server layer that includes Core, Adapter, Zero, and Swagger together
